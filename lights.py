@@ -3,7 +3,10 @@ import requests
 class Lights:
 	def __init__(self, ip):
 		self.ip = ip
-		self.red = 0
+		r = requests.get('http://' + self.ip + '/api/rgbw/state')
+		current = r.json()['rgbw']['currentColor']
+		print(current)
+		self.red = int(current[0:2], 16)
 		self.green = 0
 		self.blue = 0
 

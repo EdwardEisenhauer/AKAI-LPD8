@@ -10,8 +10,13 @@ pasek = Lights(ip)
 akai = Akai()
 
 def behaviour():
+	# TODO: Detect incoming MIDI data at the mido level?
+	[red, green, blue] = [0, 0, 0]
 	while True:
-		[red, green, blue] = [i * 2 for i in akai.get_knobs()]
+		[r, g, b] = [i * 2 for i in akai.get_knobs()]
+		if [red, green, blue] == [r, g, b]:
+			continue
+		[red, green, blue] = [r, g, b]
 		pasek.set(red, green, blue)
 		time.sleep(0.1)
 

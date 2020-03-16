@@ -17,8 +17,6 @@ class Akai:
 			for msg in inport:
 				if msg.control in range(1,4):
 					self.knobs[msg.control-1] = msg.value
-					print("self.knobs[" + str(msg.control-1) + "] == " + str(msg.value))
-					print(self.knobs)
 
 	def set_knobs(self, red, green, blue):
 		self.knobs = [red, green, blue]
