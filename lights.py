@@ -1,4 +1,5 @@
 import requests
+import sys
 
 
 class Lights:
@@ -11,15 +12,27 @@ class Lights:
     """
     def __init__(self, ip):
         """
+        Create a Lights object.
+
+        TODO:
+         - Check if IP is reachable.
+
         :param ip: LightBox's IP.
         """
         self.ip = ip
-        r = requests.get('http://' + self.ip + '/api/rgbw/state')
-        current = r.json()['rgbw']['currentColor']
-        print(current)
-        self.red = int(current[0:2], 16)
-        self.green = 0
-        self.blue = 0
+        try:
+            r = requests.get('http://' + self.ip + '/api/rgbw/state')
+        except OSError as e:    # OSError will be raised if IP won't be correct
+                                # TODO: There should be a better way to do this
+            print("Something went wrong with the GET request:\n", e)
+            sys.exit()  # Terminate the program
+        else:
+            print("Connected to IP: " + self.ip)
+            current = r.json()['rgbw']['currentColor']
+            print("Current colours settings: " + current)
+            self.red = int(current[0:2], 16)
+            self.green = 0
+            self.blue = 0
 
     def set(self, red, green, blue):
         """
