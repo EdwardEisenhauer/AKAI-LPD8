@@ -25,13 +25,24 @@ TODO:
 
 
 def producer(output_queue):
-    # [red, green, blue] = [0, 0, 0]
+    [r, g, b, w] = [i * 2 for i in akai.knobs][:4]
+    w_prev = w
     while True:
-        while akai.waiter:         # Oh my ficking god do something about this!!!
-            pass
-        [r, g, b] = [i * 2 for i in akai.get_knobs()][:3] # Get RGB values from the AKAI
-        output_queue.put([r, g, b])
-        akai.waiter = True
+        # Oh my ficking god do something about this!!!
+        if akai.knobs_change:
+            [r, g, b, w] = [i * 2 for i in akai.knobs][:4] # Get RGB values from the AKAI
+            if w == w_prev:
+                output_queue.put([r, g, b])
+            else:
+                output_queue.put([w, w, w])
+                w_prev = w
+            akai.knobs_change = False
+        elif akai.pads_change:
+            if akai.pads[3]:
+                output_queue.put([255, 255, 255])
+            else:
+                output_queue.put(map(lambda x: 255 if x else 0,akai.pads[:3]))
+            akai.pads_change = False
         sleep(0.1)                               # Do something about it!
 
 def consumer(input_queue):

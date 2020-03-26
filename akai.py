@@ -38,7 +38,8 @@ class Akai:
         self.knobs = [0] * 8
         self.pads  = [False] * 8
 
-        self.waiter = True      # Do something abou this (jak to się w ogóle nie wypierdala?)
+        self.knobs_change = False      # Do something abou this (jak to się w ogóle nie wypierdala?)
+        self.pads_change  = False
 
     def listen(self, verbose=False):
         """
@@ -53,17 +54,18 @@ class Akai:
         print('Listening to the ' + self.port_name)
         with mido.open_input(self.port_name) as inport:
             for msg in inport:
-                print(msg)
-                self.waiter = False
                 if verbose: print(msg)
                 if msg.type == 'control_change':
                     if msg.control in range(1, 8):
+                        self.knobs_change = True
                         self.knobs[msg.control-1] = msg.value
                 elif msg.type == 'note_on':
                     if msg.note in range(1,8):
+                        self.pads_change = True
                         self.pads[msg.note-1] = True
                 elif msg.type == 'note_off':
                     if msg.note in range(1,8):
+                        self.pads_change = True
                         self.pads[msg.note-1] = False
 
     def get_knobs(self):
