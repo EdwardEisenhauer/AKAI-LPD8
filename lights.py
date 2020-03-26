@@ -52,7 +52,7 @@ class Lights:
             self.blue = blue
             message = format(self.red, '02x') + format(self.green, '02x') + format(self.blue, '02x') + '00'
             requests.get('http://' + self.ip + '/s/' + message)
-            print("Sending: " + message)
+            # print("Sending: " + message)
 
     def set_white(self, white):
         """

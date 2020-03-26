@@ -6,6 +6,9 @@ class Error(Exception):
 class NoDeviceFound(Error):
     """Raised when there is no MIDI device found"""
 
+def kalbak(msg):
+    print("DUPA")
+
 class Akai:
     """
     AKAI-LPD8 representation.
@@ -14,7 +17,7 @@ class Akai:
         - [ ] PC <-> Interface connection
         - [x] Errors regarding lack of Interface being connected to the PC
           - [ ] During the runtime.
-        - [ ] Listeting to the MIDI port and storing the knob values in the memory.
+        - [x] Listeting to the MIDI port and storing the knob values in the memory.
         - [ ] Informing that the knob value has changed
     """
     def __init__(self):
@@ -33,6 +36,9 @@ class Akai:
             raise NoDeviceFound
 
         self.knobs = [0] * 8
+        self.pads  = [False] * 8
+
+        self.waiter = True      # Do something abou this (jak to się w ogóle nie wypierdala?)
 
     def listen(self, verbose=False):
         """
@@ -47,10 +53,22 @@ class Akai:
         print('Listening to the ' + self.port_name)
         with mido.open_input(self.port_name) as inport:
             for msg in inport:
+                print(msg)
+                self.waiter = False
                 if verbose: print(msg)
                 if msg.type == 'control_change':
                     if msg.control in range(1, 8):
                         self.knobs[msg.control-1] = msg.value
+                elif msg.type == 'note_on':
+                    if msg.note in range(1,8):
+                        self.pads[msg.note-1] = True
+                elif msg.type == 'note_off':
+                    if msg.note in range(1,8):
+                        self.pads[msg.note-1] = False
 
     def get_knobs(self):
         return self.knobs
+
+    def print_state(self):
+        print(self.knobs)
+        print(self.pads)

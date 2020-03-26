@@ -1,6 +1,6 @@
 from threading import Thread
 from queue import Queue
-import time
+from time import sleep
 from lights import Lights
 from akai import Akai
 import sys
@@ -23,14 +23,16 @@ TODO:
 :return:
 """
 
+
 def producer(output_queue):
-    [red, green, blue] = [0, 0, 0]
+    # [red, green, blue] = [0, 0, 0]
     while True:
+        while akai.waiter:         # Oh my ficking god do something about this!!!
+            pass
         [r, g, b] = [i * 2 for i in akai.get_knobs()][:3] # Get RGB values from the AKAI
-        if [red, green, blue] == [r, g, b]:
-            continue
         output_queue.put([r, g, b])
-        time.sleep(0.1)                               # Do something about it!
+        akai.waiter = True
+        sleep(0.1)                               # Do something about it!
 
 def consumer(input_queue):
     while True:
@@ -40,8 +42,15 @@ def consumer(input_queue):
 
         input_queue.task_done() 
 
+
+# def print_state():
+#     while True:
+#         akai.print_state()
+#         sleep(3)
+
 if __name__ == '__main__':
     q = Queue()
     Thread(target=producer, args=(q,)).start()
     Thread(target=consumer, args=(q,)).start()
     Thread(target=akai.listen).start()
+    # Thread(target=print_state).start()
