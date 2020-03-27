@@ -5,7 +5,7 @@ import sys
 from enums import EffectID
 
 
-class Lights:
+class LightBox:
     """
     Control and monitor BleBox LightBox.
 

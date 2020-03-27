@@ -1,13 +1,13 @@
 from threading import Thread
 from queue import Queue
 from time import sleep
-from lights import Lights
+from blebox import LightBox
 from akai import Akai
 import sys
 
 ip = sys.argv[1]
 
-pasek = Lights(ip)
+pasek = LightBox(ip)
 
 akai = Akai()
 

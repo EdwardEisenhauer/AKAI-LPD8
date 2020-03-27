@@ -1,39 +1,46 @@
 # AKAI-LPD8
-My friend told me to code it, not sure why tho
 
-## What?
-
-My friend gave me AKAI LPD8 and told me to read the MIDI stream and prepare it to be sent via MQTT and wrap it all into some python package. I've never used MQTT before. Nor the packages. And I'm low on caffeine.
-
-Update: it seems I should prepare some inter/extrapolating functions.
-
-## What about the lights
-
-I have some RGB controller made by BleBox and I would like to control it via AKAI.
-Three knobs should control red, green, and blue diodes. Tapping pads for the "boom" effect or setting a blinking tempo would be a nice feaure.
+My friend gave me an AKAI LPD8 MIDI interface and asked me to prepare a library to precess MIDI stream into something that could be sent via MQTT. I've never used MQTT before.
 
 ## Structure
 
-### Lights
+### Sideproject - akai-to-wLightBox.py
 
-Lights is supposed to be a class allowing to:
- - [x] set the RGB for a given values,
- - [ ] make a "boom" effect,
- - [ ] blink the lights with the given frequency.
+I have a Blebox wLightBox RGB to control the LED strip in my room. We thought it would be nice to use its API to control it via AKAI.
 
-### Akai
+Currently, the following features are included:
 
-Akai is suposed to represent the state of the LPD8 interface.
+Knobs:
+  - R, G, B, and W intensity
+  - colour and effect fading, and effect step durations (from 0 to 1000ms)
+  - effect mode (one out of 7 predefined by BleBox)
 
-## Issues
+Pads:
+  - R, G, B, and W toggling
 
-### Known
+#### Usage
 
-1. Knob 8 has some physical glitches. When turned clock-wise to the end of range after the value exceeds 127 it comes back to 90-some to reach again 127.
+Just run ```python3 akai-to-wLightBox.py IP``` providing it with wLightBox's IP address.
 
-2. My current knowledge indicates that there is no way to get a current state of a knob.
+### wLightBox.py
 
-3. LightBox's IP should be static or some way to detect it should be implemented.
+Used to communicate with the wLightBox via its API (simple GET and POST requests with JSON).
+
+### akai.py
+
+Used to listen for the incoming MIDI messages.
+
+## TODO
+  - [ ] introduce an MQTT module
+  - [ ] do something with the shared viariables in akai.py
+  - [ ] rewrite interepolate functions to convert knob positions into bpms
+
+## Known issues
+
+1. Knob 8 has some physical glitches. When turned clockwise to the end of range after the value exceeds 127 it comes back to 90-some to reach again 127.
+  1. All the knobs are sometimes glitchy.
+
+2. My current knowledge indicates that there is no way to get a current state of a knob (due to the MIDI architecture).
 
 ### Resolved (may be helpful for the visitors)
 

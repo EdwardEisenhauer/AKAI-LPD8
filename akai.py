@@ -5,9 +5,8 @@ class Error(Exception):
 
 class NoDeviceFound(Error):
     """Raised when there is no MIDI device found"""
+    pass
 
-def kalbak(msg):
-    print("DUPA")
 
 class Akai:
     """
