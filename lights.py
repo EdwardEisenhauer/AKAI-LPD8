@@ -69,7 +69,7 @@ class Lights:
                     {"rgbw":
                         {"effectID": self.effect_id}
                     }, separators=(',',':'))
-        print(requests.post(self.api_endpoint_post, message))
+        requests.post(self.api_endpoint_post, message)  # Maybe some error handling later?
 
     def set_durations(self):
         message =   json.dumps(
@@ -81,7 +81,7 @@ class Lights:
                             }
                         }
                     }, separators=(',',':'))
-        print(requests.post(self.api_endpoint_post, message))
+        requests.post(self.api_endpoint_post, message)
 
     def set_bpm(self, bpm):
         """Set bpm for a current effect"""

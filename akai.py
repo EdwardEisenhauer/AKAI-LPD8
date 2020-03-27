@@ -38,7 +38,8 @@ class Akai:
         self.knobs = [0] * 8
         self.pads  = [False] * 8
 
-        self.knobs_change = False      # Do something abou this (jak to się w ogóle nie wypierdala?)
+        self.knobs_color_change = False      # Do something abou this (jak to się w ogóle nie wypierdala?)
+        self.knobs_durations_change = False
         self.pads_change  = False
 
     def listen(self, verbose=False):
@@ -56,8 +57,11 @@ class Akai:
             for msg in inport:
                 if verbose: print(msg)
                 if msg.type == 'control_change':
-                    if msg.control in range(1, 8):
-                        self.knobs_change = True
+                    if msg.control in range(1, 5):
+                        self.knobs_color_change = True
+                        self.knobs[msg.control-1] = msg.value
+                    elif msg.control in range(5,9):
+                        self.knobs_durations_change = True
                         self.knobs[msg.control-1] = msg.value
                 elif msg.type == 'note_on':
                     if msg.note in range(1,8):
