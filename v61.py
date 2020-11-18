@@ -66,10 +66,10 @@ class V61:
                                22 : 7,
                                23 : 8
                     }
-                    if mapper[msg.control] in range(1, 5):
+                    if msg.control in mapper.keys() and mapper[msg.control] in range(1, 5):
                         self.knobs_color_change = True
                         self.knobs[mapper[msg.control]-1] = msg.value
-                    elif mapper[msg.control] in range(5,9):
+                    elif msg.control in mapper.keys() and mapper[msg.control] in range(5,9):
                         self.knobs_durations_change = True
                         self.knobs[mapper[msg.control]-1] = msg.value
                 elif msg.type == 'note_on':
@@ -78,7 +78,7 @@ class V61:
                                38 : 3,
                                39 : 4
                     }
-                    if mapper[msg.note] in range(1,8):
+                    if msg.note in mapper.keys() and mapper[msg.note] in range(1,8):
                         self.pads_change = True
                         self.pads[mapper[msg.note]-1] = True
                 elif msg.type == 'note_off':
@@ -87,7 +87,7 @@ class V61:
                                38 : 3,
                                39 : 4
                     }
-                    if mapper[msg.note] in range(1,8):
+                    if msg.note in mapper.keys() and mapper[msg.note] in range(1,8):
                         self.pads_change = True
                         self.pads[mapper[msg.note]-1] = False
 
